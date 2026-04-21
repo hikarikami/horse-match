@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
 import './App.css'
 import horseSound from './assets/horse-sound-1.mp3'
 
@@ -50,13 +51,8 @@ function buildDeck() {
   const nonHorses     = shuffled(profiles.filter(p => p.species === 'donkey' || p.species === 'zebra'))
   const capybara      = profiles.find(p => p.species === 'capybara')!
 
-  // First 4: Springsworth + 3 random horses, shuffled so Springsworth isn't always first
   const first4 = shuffled([springsworth, ...otherHorses.slice(0, 3)])
-
-  // Remaining horses + donkeys/zebras all mixed together for positions 4+
   const rest = shuffled([...otherHorses.slice(3), ...nonHorses])
-
-  // Insert capybara at a random position that's index 2+ in rest (= position 6+ overall)
   const capaPos = Math.floor(Math.random() * (rest.length - 1)) + 2
   rest.splice(capaPos, 0, capybara)
 
@@ -65,8 +61,31 @@ function buildDeck() {
 
 const deck = buildDeck()
 
-
 type Profile = typeof profiles[0]
+
+function CardContent({ p }: { p: Profile }) {
+  return (
+    <>
+      <div
+        className="profile-img"
+        aria-label={p.name}
+        role="img"
+        style={{
+          backgroundImage: `url(${p.img})`,
+          transform: p.flip ? 'scaleX(-1) translateZ(0)' : 'translateZ(0)',
+        }}
+      />
+      <div className="profile-info">
+        <div className="profile-name-row">
+          <span className="profile-name">{p.name}</span>
+          <span className="profile-age">{p.age}</span>
+        </div>
+        <p className="profile-bio">{p.bio}</p>
+        <span className="verified-badge">✔ verified horse™</span>
+      </div>
+    </>
+  )
+}
 
 function SuperNeighModal({ onClose }: { onClose: () => void }) {
   return (
@@ -157,23 +176,31 @@ function LikesPage({ matchedProfiles }: { matchedProfiles: Profile[] }) {
 export default function App() {
   const [index, setIndex] = useState(0)
   const [lastAction, setLastAction] = useState<string | null>(null)
-  const [dragX, setDragX] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
-  const [flyDir, setFlyDir] = useState<null | 'left' | 'right'>(null)
   const [matchedProfiles, setMatchedProfiles] = useState<Profile[]>([])
   const [showSuperNeigh, setShowSuperNeigh] = useState(false)
-  const [glitchToast, setGlitchToast] = useState(false)
   const [activePage, setActivePage] = useState<'home' | 'likes'>('home')
-  const startX = useRef(0)
-  const cardRef = useRef<HTMLDivElement>(null)
+  const [isSwiping, setIsSwiping] = useState(false)
+
+  const x = useMotionValue(0)
+  const rotate = useTransform(x, [-250, 250], [-20, 20])
+  const likeOpacity = useTransform(x, [50, 150], [0, 1])
+  const nopeOpacity = useTransform(x, [-150, -50], [1, 0])
+
+  useEffect(() => {
+    for (const profile of deck) {
+      const img = new window.Image()
+      img.src = profile.img
+      void img.decode?.().catch(() => {})
+    }
+  }, [])
+
+  useLayoutEffect(() => {
+    x.set(0)
+    setIsSwiping(false)
+  }, [index])
 
   const current = deck[index]
   const isDone = index >= deck.length
-
-  function triggerGlitchToast() {
-    setGlitchToast(true)
-    setTimeout(() => setGlitchToast(false), 2200)
-  }
 
   function openSuperNeigh() {
     new Audio(horseSound).play().catch(() => {})
@@ -181,101 +208,35 @@ export default function App() {
   }
 
   function commitLike() {
-    const bugActivated = Math.random() < 0.3
-    if (bugActivated) {
-      console.log('NEIGH rejected')
-      triggerGlitchToast()
-      setLastAction('💔 Noped (bug)')
-    } else {
-      setLastAction('💚 Liked!')
-      setMatchedProfiles(prev => [...prev, deck[index]])
-    }
+    setLastAction('💚 Liked!')
+    setMatchedProfiles(prev => [...prev, deck[index]])
     const next = index + 1
     setIndex(next)
     if (next >= deck.length) setTimeout(() => openSuperNeigh(), 400)
   }
 
   function commitNope() {
-    if (Math.random() > 0.15) {
-      setLastAction('❌ Noped')
-      const next = index + 1
-      setIndex(next)
-      if (next >= deck.length) setTimeout(() => openSuperNeigh(), 400)
-    } else {
-      setLastAction('❌ Noped (try again?)')
-    }
+    setLastAction('❌ Noped')
+    const next = index + 1
+    setIndex(next)
+    if (next >= deck.length) setTimeout(() => openSuperNeigh(), 400)
   }
 
-  function flyOut(dir: 'left' | 'right', onDone: () => void) {
-    setFlyDir(dir)
-    setIsDragging(false)
-    setTimeout(() => { setFlyDir(null); setDragX(0); onDone() }, 420)
+  function doSwipe(dir: 'left' | 'right', commit: () => void) {
+    if (isSwiping) return
+    setIsSwiping(true)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    animate(x, dir === 'right' ? 700 : -700, { duration: 0.3, ease: [0.25, 1, 0.5, 1] } as any).then(() => {
+      commit()
+    })
   }
 
-  function handleLike() { flyOut('right', commitLike) }
-  function handleNope() { flyOut('left', commitNope) }
-
-  function onMouseDown(e: React.MouseEvent) {
-    if (flyDir) return
-    startX.current = e.clientX
-    setIsDragging(true)
-  }
-
-  function onMouseMove(e: React.MouseEvent) {
-    if (!isDragging) return
-    setDragX((e.clientX - startX.current) * 1.8)
-  }
-
-  function onMouseUp() {
-    if (!isDragging) return
-    setIsDragging(false)
-    if (dragX > 180) flyOut('right', commitLike)
-    else if (dragX < -180) flyOut('left', commitNope)
-    else setDragX(0)
-  }
-
-  function onTouchStart(e: React.TouchEvent) {
-    if (flyDir) return
-    startX.current = e.touches[0].clientX
-    setIsDragging(true)
-  }
-
-  function onTouchMove(e: React.TouchEvent) {
-    if (!isDragging) return
-    setDragX((e.touches[0].clientX - startX.current) * 1.8)
-  }
-
-  function onTouchEnd() {
-    if (!isDragging) return
-    setIsDragging(false)
-    if (dragX > 180) flyOut('right', commitLike)
-    else if (dragX < -180) flyOut('left', commitNope)
-    else setDragX(0)
-  }
-
-  const cardRotation = dragX * 0.12
-  const likeOpacity = Math.min(dragX / 100, 1)
-  const nopeOpacity = Math.min(-dragX / 100, 1)
-  const behindScale = 0.93 + Math.min(Math.abs(dragX) / 180, 1) * 0.07
-
-  const cardTransform = flyDir === 'right'
-    ? 'translateX(160vw) rotate(45deg)'
-    : flyDir === 'left'
-    ? 'translateX(-160vw) rotate(-45deg)'
-    : `translateX(${dragX}px) rotate(${cardRotation}deg)`
-
-  const cardTransition = flyDir
-    ? 'transform 0.42s ease-in'
-    : 'transform 0.08s ease-out'
+  function handleLike() { doSwipe('right', commitLike) }
+  function handleNope() { doSwipe('left', commitNope) }
 
   return (
     <div className="app-shell">
-{showSuperNeigh && <SuperNeighModal onClose={() => setShowSuperNeigh(false)} />}
-
-      {/* Glitch toast */}
-      <div className={`glitch-toast ${glitchToast ? 'glitch-toast-visible' : ''}`}>
-        😤 Nope, out of your league!
-      </div>
+      {showSuperNeigh && <SuperNeighModal onClose={() => setShowSuperNeigh(false)} />}
 
       {/* Header */}
       <div className="header">
@@ -308,54 +269,49 @@ export default function App() {
               </div>
             ) : (
               <div className="card-stack">
-                {/* Next card sitting behind */}
-                {deck[index + 1] && (
-                  <div className="profile-card card-behind" style={{
-                    transform: `scale(${behindScale})`,
-                  }}>
-                    <img src={deck[index + 1].img} alt={deck[index + 1].name} className="profile-img" draggable={false} style={deck[index + 1].flip ? { transform: 'scaleX(-1)' } : undefined} />
-                    <div className="profile-info">
-                      <div className="profile-name-row">
-                        <span className="profile-name">{deck[index + 1].name}</span>
-                        <span className="profile-age">{deck[index + 1].age}</span>
-                      </div>
-                      <p className="profile-bio">{deck[index + 1].bio}</p>
-                      <span className="verified-badge">✔ verified horse™</span>
-                    </div>
-                  </div>
+
+                {/* Hidden card — same element type so React reuses DOM node when it promotes */}
+                {deck[index + 2] && (
+                  <motion.div
+                    key={deck[index + 2].id}
+                    className="profile-card card-hidden"
+                    style={{ pointerEvents: 'none' }}
+                  >
+                    <CardContent p={deck[index + 2]} />
+                  </motion.div>
                 )}
 
-                {/* Current card */}
-                <div
-                  key={index}
-                  ref={cardRef}
-                  className="profile-card"
-                  style={{
-                    transform: cardTransform,
-                    transition: cardTransition,
-                    cursor: isDragging ? 'grabbing' : 'grab',
-                    userSelect: 'none',
+                {/* Behind card — scales up as front departs; React reuses this node as the next front */}
+                {deck[index + 1] && (
+                  <motion.div
+                    key={deck[index + 1].id}
+                    className="profile-card card-behind"
+                    animate={{ scale: isSwiping ? 1 : 0.93 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                    style={{ pointerEvents: 'none' }}
+                  >
+                    <CardContent p={deck[index + 1]} />
+                  </motion.div>
+                )}
+
+                {/* Front card — when index advances, React moves the old behind-card DOM node here */}
+                <motion.div
+                  key={current.id}
+                  className="profile-card card-front"
+                  style={{ x, rotate, cursor: isSwiping ? 'default' : 'grab', userSelect: 'none' }}
+                  drag={isSwiping ? false : 'x'}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.7}
+                  onDragEnd={(_, info) => {
+                    if (isSwiping) return
+                    if (info.offset.x > 80 || info.velocity.x > 400) doSwipe('right', commitLike)
+                    else if (info.offset.x < -80 || info.velocity.x < -400) doSwipe('left', commitNope)
                   }}
-                  onMouseDown={onMouseDown}
-                  onMouseMove={onMouseMove}
-                  onMouseUp={onMouseUp}
-                  onMouseLeave={onMouseUp}
-                  onTouchStart={onTouchStart}
-                  onTouchMove={onTouchMove}
-                  onTouchEnd={onTouchEnd}
                 >
-                  <div className="swipe-label like-label" style={{ opacity: likeOpacity }}>NEIGH ✅</div>
-                  <div className="swipe-label nope-label" style={{ opacity: nopeOpacity }}>NOPE 🚫</div>
-                  <img src={current.img} alt={current.name} className="profile-img" draggable={false} style={current.flip ? { transform: 'scaleX(-1)' } : undefined} />
-                  <div className="profile-info">
-                    <div className="profile-name-row">
-                      <span className="profile-name">{current.name}</span>
-                      <span className="profile-age">{current.age}</span>
-                    </div>
-                    <p className="profile-bio">{current.bio}</p>
-                    <span className="verified-badge">✔ verified horse™</span>
-                  </div>
-                </div>
+                  <motion.div className="swipe-label like-label" style={{ opacity: likeOpacity }}>NEIGH ✅</motion.div>
+                  <motion.div className="swipe-label nope-label" style={{ opacity: nopeOpacity }}>NOPE 🚫</motion.div>
+                  <CardContent p={current} />
+                </motion.div>
               </div>
             )}
           </div>
