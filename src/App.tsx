@@ -311,18 +311,18 @@ export default function App() {
         <div className={`nav-item ${activePage === 'home' ? 'active-nav' : ''}`} onClick={() => setActivePage('home')}>
           🏠<span>Home</span>
         </div>
-        <div className={`nav-item ${activePage === 'likes' ? 'active-nav' : ''}`} onClick={() => setActivePage('likes')}>
+        <div className={`nav-item nav-likes ${activePage === 'likes' ? 'active-nav' : ''}`} onClick={() => setActivePage('likes')}>
           <span style={{ fontFamily: 'serif', fontSize: 20 }}>♡</span>
           <span>LIKES</span>
         </div>
-        <div className="nav-item" style={{ paddingBottom: 12 }}>
+        <div className="nav-item nav-messages">
           💬<span style={{ fontSize: 8 }}>Messages</span>
         </div>
-        <div className="nav-item">
-          <img src="https://img.icons8.com/ios/20/user-male-circle.png" alt="profile" style={{ width: 18, filter: 'invert(1)' }} />
+        <div className="nav-item nav-me">
+          <img src="https://img.icons8.com/ios/20/user-male-circle.png" alt="profile" style={{ width: 18, filter: 'invert(0)' }} />
           <span>Me</span>
         </div>
-        <div className="nav-item" style={{ paddingTop: 10 }}>
+        <div className="nav-item nav-settings">
           ⚙️<span>settings</span>
         </div>
       </div>
