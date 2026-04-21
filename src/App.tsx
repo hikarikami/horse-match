@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import './App.css'
 
 import horse1 from './assets/horse-pics/horse-1.jpg'
