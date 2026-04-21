@@ -6,14 +6,14 @@
 
 body {
   background: #1a0a2e;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   font-family: Arial, sans-serif;
 }
 
 .app-shell {
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   background: linear-gradient(160deg, #2d0050, #001a33, #1a0a2e);
   display: flex;
   flex-direction: column;
