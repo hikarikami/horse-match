@@ -19,7 +19,7 @@ body {
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  padding-bottom: 62px; /* reserve space for fixed nav */
+  padding-bottom: 48px; /* slightly under nav height so last-action row peeks behind it */
 }
 
 /* Header */
@@ -91,7 +91,7 @@ body {
 
 .profile-img {
   width: 100%;
-  height: 45vh;
+  height: 30vh;
   object-fit: cover;
   display: block;
   pointer-events: none;
