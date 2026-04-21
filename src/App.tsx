@@ -26,15 +26,29 @@ const profiles = [
   { id: 9,  name: 'Moonbeam',       age: 5,  bio: 'Vegan. Yes, I know. I eat grass. I am the most natural vegan on this app and I need you to respect that.', img: horse6 },
   { id: 10, name: 'Brenda',         age: 11, bio: 'Second donkey on this app. Will not apologise. Looking for someone who accepts me as I am. Bray if you agree.', img: donkey3 },
   { id: 11, name: 'Zigzag',         age: 4,  bio: "Yes I have stripes. No I won't explain. Yes I'm on a horse app. No I don't see the issue.", img: zebra2 },
+  { id: 14, name: 'Kevin',           age: 6,  bio: "My name is Kevin. I don't know why either. Looking for someone who won't make it weird.", img: horse3, flip: true },
+  { id: 15, name: 'Duchess Clops',   age: 9,  bio: "I have a lot of opinions about hay. Too many, probably. My ex said I was 'a lot'. He was right.", img: horse4, flip: true },
+  { id: 16, name: 'Springsworth',    age: 7,  bio: "People say I have a lot of energy. I don't know what they mean. I don't know what they mean. I don't know what they mean.", img: horse5, flip: true, bouncy: true },
+  { id: 17, name: 'Wobbles McGee',   age: 5,  bio: "My vet says I'm 'structurally fine'. My friends say I walk weird. We do not talk about it.", img: horse6, flip: true, wobble: true },
+  { id: 18, name: 'Trembles',        age: 8,  bio: "Always a little cold. Always a little nervous. Not sure what I'm looking for but I'll know when I see it. Probably.", img: horse1, tremble: true },
 ]
 
-function getShuffledWithRepeats() {
-  const shuffled = [...profiles]
-  shuffled.splice(6, 0, profiles[2])
-  return shuffled
+function shuffled<T>(arr: T[]): T[] {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
 }
 
-const deck = getShuffledWithRepeats()
+const deck = shuffled(profiles)
+
+const cardPersonalities = deck.map(() => ({
+  rotMult:   (Math.random() * 0.55 + 0.2) * (Math.random() > 0.25 ? 1 : -1),
+  yDrift:    (Math.random() - 0.5) * 0.5,
+  xSens:     Math.random() * 1.0 + 1.4,
+}))
 
 type Profile = typeof profiles[0]
 
@@ -129,13 +143,14 @@ export default function App() {
   const [lastAction, setLastAction] = useState<string | null>(null)
   const [dragX, setDragX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const [flyDir, setFlyDir] = useState<null | 'left' | 'right'>(null)
+  const [flyTransform, setFlyTransform] = useState('')
   const [matchedProfiles, setMatchedProfiles] = useState<Profile[]>([])
   const [showSuperNeigh, setShowSuperNeigh] = useState(false)
   const [glitchToast, setGlitchToast] = useState(false)
   const [activePage, setActivePage] = useState<'home' | 'likes'>('home')
   const startX = useRef(0)
   const cardRef = useRef<HTMLDivElement>(null)
-  const swipesSincePrompt = useRef(0)
 
   const current = deck[index]
   const isDone = index >= deck.length
@@ -146,85 +161,134 @@ export default function App() {
   }
 
   function openSuperNeigh() {
-    new Audio(horseSound).play()
+    new Audio(horseSound).play().catch(() => {})
     setShowSuperNeigh(true)
   }
 
-  function maybeShowAutoPromo() {
-    swipesSincePrompt.current += 1
-    if (swipesSincePrompt.current >= 3) {
-      swipesSincePrompt.current = 0
-      setTimeout(() => openSuperNeigh(), 300)
-    }
-  }
-
-  function handleLike() {
+  function commitLike() {
     const bugActivated = Math.random() < 0.3
     if (bugActivated) {
       console.log('NEIGH rejected')
       triggerGlitchToast()
       setLastAction('💔 Noped (bug)')
-      setIndex(i => i + 1)
     } else {
       setLastAction('💚 Liked!')
       setMatchedProfiles(prev => [...prev, deck[index]])
-      setIndex(i => i + 1)
     }
-    maybeShowAutoPromo()
+    const next = index + 1
+    setIndex(next)
+    if (next >= deck.length) setTimeout(() => openSuperNeigh(), 400)
   }
 
-  function handleNope() {
-    setLastAction('❌ Noped')
+  function commitNope() {
     if (Math.random() > 0.15) {
-      setIndex(i => i + 1)
+      setLastAction('❌ Noped')
+      const next = index + 1
+      setIndex(next)
+      if (next >= deck.length) setTimeout(() => openSuperNeigh(), 400)
     } else {
       setLastAction('❌ Noped (try again?)')
     }
-    maybeShowAutoPromo()
   }
 
+  function flyOut(dir: 'left' | 'right', onDone: () => void) {
+    const likeOptions = [
+      'translate(160vw, 0px) rotate(55deg)',
+      'translate(130vw, -160vh) rotate(220deg)',
+      'translate(90vw, 170vh) rotate(-60deg)',
+      'translate(150vw, -60vh) rotate(720deg)',
+    ]
+    const nopeOptions = [
+      'translate(-160vw, 0px) rotate(-55deg)',
+      'translate(-130vw, -160vh) rotate(-220deg)',
+      'translate(-90vw, 170vh) rotate(60deg)',
+      'translate(-150vw, -60vh) rotate(-720deg)',
+    ]
+    const options = dir === 'right' ? likeOptions : nopeOptions
+    setFlyTransform(options[Math.floor(Math.random() * options.length)])
+    setFlyDir(dir)
+    setIsDragging(false)
+    setTimeout(() => { setFlyDir(null); setDragX(0); onDone() }, 520)
+  }
+
+  function handleLike() { flyOut('right', commitLike) }
+  function handleNope() { flyOut('left', commitNope) }
+
   function onMouseDown(e: React.MouseEvent) {
+    if (flyDir) return
     startX.current = e.clientX
     setIsDragging(true)
   }
 
   function onMouseMove(e: React.MouseEvent) {
     if (!isDragging) return
-    setDragX((e.clientX - startX.current) * 1.8)
+    const p = cardPersonalities[index] ?? { xSens: 1.8 }
+    setDragX((e.clientX - startX.current) * p.xSens)
   }
 
   function onMouseUp() {
     if (!isDragging) return
     setIsDragging(false)
-    if (dragX > 180) handleLike()
-    else if (dragX < -180) handleNope()
-    setDragX(0)
+    if (dragX > 180) flyOut('right', commitLike)
+    else if (dragX < -180) flyOut('left', commitNope)
+    else setDragX(0)
   }
 
   function onTouchStart(e: React.TouchEvent) {
+    if (flyDir) return
     startX.current = e.touches[0].clientX
     setIsDragging(true)
   }
 
   function onTouchMove(e: React.TouchEvent) {
     if (!isDragging) return
-    setDragX((e.touches[0].clientX - startX.current) * 1.8)
+    const p = cardPersonalities[index] ?? { xSens: 1.8 }
+    setDragX((e.touches[0].clientX - startX.current) * p.xSens)
   }
 
   function onTouchEnd() {
     if (!isDragging) return
     setIsDragging(false)
-    if (dragX > 180) handleLike()
-    else if (dragX < -180) handleNope()
-    setDragX(0)
+    if (dragX > 180) flyOut('right', commitLike)
+    else if (dragX < -180) flyOut('left', commitNope)
+    else setDragX(0)
   }
 
-  const cardRotation = dragX * 0.06
+  const p = cardPersonalities[index] ?? { rotMult: 0.18, yDrift: 0, xSens: 1.8 }
+  const cardRotation = dragX * p.rotMult
+  const cardY = dragX * p.yDrift
   const likeOpacity = Math.min(dragX / 100, 1)
   const nopeOpacity = Math.min(-dragX / 100, 1)
+  const behindScale = 0.93 + Math.min(Math.abs(dragX) / 180, 1) * 0.07
+
+  const cardTransform = flyDir
+    ? flyTransform
+    : current.bouncy
+    ? `translateX(${dragX}px) translateY(${Math.sin(dragX * 0.08) * 40}px)`
+    : current.wobble
+    ? `translateX(${dragX * 0.6}px) translateY(${Math.sin(dragX * 0.15) * 18}px) rotate(${Math.sin(dragX * 0.12) * 22}deg)`
+    : current.tremble
+    ? `translateX(${dragX * 0.7}px) translateY(${Math.sin(dragX * 0.04) * 55}px) rotate(${Math.sin(dragX * 0.035) * 38}deg)`
+    : `translateX(${dragX}px) translateY(${cardY}px) rotate(${cardRotation}deg)`
+
+  const cardTransition = flyDir
+    ? 'transform 0.52s cubic-bezier(.4,0,.8,.2)'
+    : 'transform 0.08s cubic-bezier(.25,.8,.5,1.4)'
 
   return (
     <div className="app-shell">
+      {/* Hidden SVG filter for wobble effect */}
+      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+        <defs>
+          <filter id="wobble-filter" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.008" numOctaves="3" result="noise" seed="5">
+              <animate attributeName="baseFrequency" values="0.008 0.005;0.018 0.012;0.006 0.014;0.016 0.006;0.008 0.005" dur="6s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+
       {showSuperNeigh && <SuperNeighModal onClose={() => setShowSuperNeigh(false)} />}
 
       {/* Glitch toast */}
@@ -262,32 +326,54 @@ export default function App() {
                 </button>
               </div>
             ) : (
-              <div
-                ref={cardRef}
-                className="profile-card"
-                style={{
-                  transform: `translateX(${dragX}px) rotate(${cardRotation}deg)`,
-                  cursor: isDragging ? 'grabbing' : 'grab',
-                  userSelect: 'none',
-                }}
-                onMouseDown={onMouseDown}
-                onMouseMove={onMouseMove}
-                onMouseUp={onMouseUp}
-                onMouseLeave={onMouseUp}
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}
-              >
-                <div className="swipe-label like-label" style={{ opacity: likeOpacity }}>NEIGH ✅</div>
-                <div className="swipe-label nope-label" style={{ opacity: nopeOpacity }}>NOPE 🚫</div>
-                <img src={current.img} alt={current.name} className="profile-img" draggable={false} />
-                <div className="profile-info">
-                  <div className="profile-name-row">
-                    <span className="profile-name">{current.name}</span>
-                    <span className="profile-age">{current.age}</span>
+              <div className="card-stack">
+                {/* Next card sitting behind */}
+                {deck[index + 1] && (
+                  <div className="profile-card card-behind" style={{
+                    transform: `scale(${behindScale})`,
+                  }}>
+                    <img src={deck[index + 1].img} alt={deck[index + 1].name} className="profile-img" draggable={false} style={deck[index + 1].flip ? { transform: 'scaleX(-1)' } : undefined} />
+                    <div className="profile-info">
+                      <div className="profile-name-row">
+                        <span className="profile-name">{deck[index + 1].name}</span>
+                        <span className="profile-age">{deck[index + 1].age}</span>
+                      </div>
+                      <p className="profile-bio">{deck[index + 1].bio}</p>
+                      <span className="verified-badge">✔ verified horse™</span>
+                    </div>
                   </div>
-                  <p className="profile-bio">{current.bio}</p>
-                  <span className="verified-badge">✔ verified horse™</span>
+                )}
+
+                {/* Current card */}
+                <div
+                  key={index}
+                  ref={cardRef}
+                  className={`profile-card${current.wobble && isDragging ? ' card-wobble' : ''}`}
+                  style={{
+                    transform: cardTransform,
+                    transition: cardTransition,
+                    cursor: isDragging ? 'grabbing' : 'grab',
+                    userSelect: 'none',
+                  }}
+                  onMouseDown={onMouseDown}
+                  onMouseMove={onMouseMove}
+                  onMouseUp={onMouseUp}
+                  onMouseLeave={onMouseUp}
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
+                >
+                  <div className="swipe-label like-label" style={{ opacity: likeOpacity }}>NEIGH ✅</div>
+                  <div className="swipe-label nope-label" style={{ opacity: nopeOpacity }}>NOPE 🚫</div>
+                  <img src={current.img} alt={current.name} className="profile-img" draggable={false} style={current.flip ? { transform: 'scaleX(-1)' } : undefined} />
+                  <div className="profile-info">
+                    <div className="profile-name-row">
+                      <span className="profile-name">{current.name}</span>
+                      <span className="profile-age">{current.age}</span>
+                    </div>
+                    <p className="profile-bio">{current.bio}</p>
+                    <span className="verified-badge">✔ verified horse™</span>
+                  </div>
                 </div>
               </div>
             )}
