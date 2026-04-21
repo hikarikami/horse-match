@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import './App.css'
+import horseSound from './assets/horse-sound-1.mp3'
 
 import horse1 from './assets/horse-pics/horse-1.jpg'
 import horse2 from './assets/horse-pics/horse-2.jpg'
@@ -144,11 +145,16 @@ export default function App() {
     setTimeout(() => setGlitchToast(false), 2200)
   }
 
+  function openSuperNeigh() {
+    new Audio(horseSound).play()
+    setShowSuperNeigh(true)
+  }
+
   function maybeShowAutoPromo() {
     swipesSincePrompt.current += 1
     if (swipesSincePrompt.current >= 3) {
       swipesSincePrompt.current = 0
-      setTimeout(() => setShowSuperNeigh(true), 300)
+      setTimeout(() => openSuperNeigh(), 300)
     }
   }
 
@@ -291,7 +297,7 @@ export default function App() {
           {!isDone && (
             <div className="action-row">
               <button className="btn-nope" onClick={handleNope} style={{ height: 54 }}>✕ NOPE</button>
-              <button className="btn-superlike" style={{ height: 44, fontSize: 10 }} onClick={() => setShowSuperNeigh(true)}>
+              <button className="btn-superlike" style={{ height: 44, fontSize: 10 }} onClick={openSuperNeigh}>
                 ⭐<br/>super
               </button>
               <button className="btn-like" onClick={handleLike} style={{ height: 60 }}>LIKE ♥</button>
