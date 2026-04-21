@@ -13,24 +13,26 @@ import donkey2 from './assets/horse-pics/donkey-2.jpg'
 import donkey3 from './assets/horse-pics/donkey-3.jpg'
 import zebra1 from './assets/horse-pics/zebra-1.jpg'
 import zebra2 from './assets/horse-pics/zebra-2.jpg'
+import cappy1 from './assets/horse-pics/cappy-1.jpg'
 
 const profiles = [
-  { id: 1,  name: 'Thunderhoof',    age: 6,  bio: 'Looking for someone to gallop into the sunset with. Will spook at plastic bags. Non-negotiable.', img: horse1 },
-  { id: 2,  name: 'Princess Oatcake', age: 4, bio: 'Emotionally unavailable. Afraid of fences. My last relationship ended because he was "too stable". Never again.', img: horse2 },
-  { id: 3,  name: 'Gerald',         age: 9,  bio: "I'm not like other donkeys. I have a podcast. It's about hay.", img: donkey1 },
-  { id: 4,  name: 'Blaze McSnort',  age: 7,  bio: 'Competitive eater. Professional napper. Once kicked a man just to see what would happen. Regrets nothing.', img: horse3 },
-  { id: 5,  name: 'Stripes',        age: 5,  bio: "Not a horse. Not going to explain further. Swipe right if you're open-minded. Swipe left if you're a lion.", img: zebra1 },
-  { id: 6,  name: 'Cloppington III', age: 12, bio: 'Old money. Smells like saddle leather and regret. Currently in therapy. Progress is slow.', img: horse4 },
-  { id: 7,  name: 'Dolores',        age: 3,  bio: 'I am LITERALLY a donkey and I am thriving. My therapist says I have "big energy". She is also a donkey.', img: donkey2 },
-  { id: 8,  name: 'Sir Gallopsalot', age: 8, bio: 'Equestrian champion 2019. Lost everything in 2020. Comeback arc currently loading. Please be patient.', img: horse5 },
-  { id: 9,  name: 'Moonbeam',       age: 5,  bio: 'Vegan. Yes, I know. I eat grass. I am the most natural vegan on this app and I need you to respect that.', img: horse6 },
-  { id: 10, name: 'Brenda',         age: 11, bio: 'Second donkey on this app. Will not apologise. Looking for someone who accepts me as I am. Bray if you agree.', img: donkey3 },
-  { id: 11, name: 'Zigzag',         age: 4,  bio: "Yes I have stripes. No I won't explain. Yes I'm on a horse app. No I don't see the issue.", img: zebra2 },
-  { id: 14, name: 'Kevin',           age: 6,  bio: "My name is Kevin. I don't know why either. Looking for someone who won't make it weird.", img: horse3, flip: true },
-  { id: 15, name: 'Duchess Clops',   age: 9,  bio: "I have a lot of opinions about hay. Too many, probably. My ex said I was 'a lot'. He was right.", img: horse4, flip: true },
-  { id: 16, name: 'Springsworth',    age: 7,  bio: "People say I have a lot of energy. I don't know what they mean. I don't know what they mean. I don't know what they mean.", img: horse5, flip: true, bouncy: true },
-  { id: 17, name: 'Wobbles McGee',   age: 5,  bio: "My vet says I'm 'structurally fine'. My friends say I walk weird. We do not talk about it.", img: horse6, flip: true, wobble: true },
-  { id: 18, name: 'Trembles',        age: 8,  bio: "Always a little cold. Always a little nervous. Not sure what I'm looking for but I'll know when I see it. Probably.", img: horse1, tremble: true },
+  { id: 1,  species: 'horse',    name: 'Thunderhoof',    age: 6,  bio: 'Looking for someone to gallop into the sunset with. Will spook at plastic bags. Non-negotiable.', img: horse1 },
+  { id: 2,  species: 'horse',    name: 'Princess Oatcake', age: 4, bio: 'Emotionally unavailable. Afraid of fences. My last relationship ended because he was "too stable". Never again.', img: horse2 },
+  { id: 3,  species: 'donkey',   name: 'Gerald',         age: 9,  bio: "I'm not like other donkeys. I have a podcast. It's about hay.", img: donkey1 },
+  { id: 4,  species: 'horse',    name: 'Blaze McSnort',  age: 7,  bio: 'Competitive eater. Professional napper. Once kicked a man just to see what would happen. Regrets nothing.', img: horse3 },
+  { id: 5,  species: 'zebra',    name: 'Stripes',        age: 5,  bio: "Not a horse. Not going to explain further. Swipe right if you're open-minded. Swipe left if you're a lion.", img: zebra1 },
+  { id: 6,  species: 'horse',    name: 'Cloppington III', age: 12, bio: 'Old money. Smells like saddle leather and regret. Currently in therapy. Progress is slow.', img: horse4 },
+  { id: 7,  species: 'donkey',   name: 'Dolores',        age: 3,  bio: 'I am LITERALLY a donkey and I am thriving. My therapist says I have "big energy". She is also a donkey.', img: donkey2 },
+  { id: 8,  species: 'horse',    name: 'Sir Gallopsalot', age: 8, bio: 'Equestrian champion 2019. Lost everything in 2020. Comeback arc currently loading. Please be patient.', img: horse5 },
+  { id: 9,  species: 'horse',    name: 'Moonbeam',       age: 5,  bio: 'Vegan. Yes, I know. I eat grass. I am the most natural vegan on this app and I need you to respect that.', img: horse6 },
+  { id: 10, species: 'donkey',   name: 'Brenda',         age: 11, bio: 'Second donkey on this app. Will not apologise. Looking for someone who accepts me as I am. Bray if you agree.', img: donkey3 },
+  { id: 11, species: 'zebra',    name: 'Zigzag',         age: 4,  bio: "Yes I have stripes. No I won't explain. Yes I'm on a horse app. No I don't see the issue.", img: zebra2 },
+  { id: 14, species: 'horse',    name: 'Kevin',          age: 6,  bio: "My name is Kevin. I don't know why either. Looking for someone who won't make it weird.", img: horse3, flip: true },
+  { id: 15, species: 'horse',    name: 'Duchess Clops',  age: 9,  bio: "I have a lot of opinions about hay. Too many, probably. My ex said I was 'a lot'. He was right.", img: horse4, flip: true },
+  { id: 16, species: 'horse',    name: 'Springsworth',   age: 7,  bio: "People say I have a lot of energy. I don't know what they mean. I don't know what they mean. I don't know what they mean.", img: horse5, flip: true, bouncy: true },
+  { id: 17, species: 'horse',    name: 'Wobbles McGee',  age: 5,  bio: "My vet says I'm 'structurally fine'. My friends say I walk weird. We do not talk about it.", img: horse6, flip: true, wobble: true },
+  { id: 18, species: 'horse',    name: 'Trembles',       age: 8,  bio: "Always a little cold. Always a little nervous. Not sure what I'm looking for but I'll know when I see it. Probably.", img: horse1, tremble: true },
+  { id: 19, species: 'capybara', name: 'Fernando',       age: 6,  bio: "Largest rodent in the world. Very chill. Almost suspiciously chill. Not a horse but I feel like that's not the point. Are you okay? I'm okay.", img: cappy1 },
 ]
 
 function shuffled<T>(arr: T[]): T[] {
@@ -42,13 +44,27 @@ function shuffled<T>(arr: T[]): T[] {
   return a
 }
 
-const deck = shuffled(profiles)
+function buildDeck() {
+  const springsworth = profiles.find(p => p.id === 16)!
+  const otherHorses   = shuffled(profiles.filter(p => p.species === 'horse' && p.id !== 16))
+  const nonHorses     = shuffled(profiles.filter(p => p.species === 'donkey' || p.species === 'zebra'))
+  const capybara      = profiles.find(p => p.species === 'capybara')!
 
-const cardPersonalities = deck.map(() => ({
-  rotMult:   (Math.random() * 0.55 + 0.2) * (Math.random() > 0.25 ? 1 : -1),
-  yDrift:    (Math.random() - 0.5) * 0.5,
-  xSens:     Math.random() * 1.0 + 1.4,
-}))
+  // First 4: Springsworth + 3 random horses, shuffled so Springsworth isn't always first
+  const first4 = shuffled([springsworth, ...otherHorses.slice(0, 3)])
+
+  // Remaining horses + donkeys/zebras all mixed together for positions 4+
+  const rest = shuffled([...otherHorses.slice(3), ...nonHorses])
+
+  // Insert capybara at a random position that's index 2+ in rest (= position 6+ overall)
+  const capaPos = Math.floor(Math.random() * (rest.length - 1)) + 2
+  rest.splice(capaPos, 0, capybara)
+
+  return [...first4, ...rest]
+}
+
+const deck = buildDeck()
+
 
 type Profile = typeof profiles[0]
 
@@ -144,7 +160,6 @@ export default function App() {
   const [dragX, setDragX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [flyDir, setFlyDir] = useState<null | 'left' | 'right'>(null)
-  const [flyTransform, setFlyTransform] = useState('')
   const [matchedProfiles, setMatchedProfiles] = useState<Profile[]>([])
   const [showSuperNeigh, setShowSuperNeigh] = useState(false)
   const [glitchToast, setGlitchToast] = useState(false)
@@ -192,23 +207,9 @@ export default function App() {
   }
 
   function flyOut(dir: 'left' | 'right', onDone: () => void) {
-    const likeOptions = [
-      'translate(160vw, 0px) rotate(55deg)',
-      'translate(130vw, -160vh) rotate(220deg)',
-      'translate(90vw, 170vh) rotate(-60deg)',
-      'translate(150vw, -60vh) rotate(720deg)',
-    ]
-    const nopeOptions = [
-      'translate(-160vw, 0px) rotate(-55deg)',
-      'translate(-130vw, -160vh) rotate(-220deg)',
-      'translate(-90vw, 170vh) rotate(60deg)',
-      'translate(-150vw, -60vh) rotate(-720deg)',
-    ]
-    const options = dir === 'right' ? likeOptions : nopeOptions
-    setFlyTransform(options[Math.floor(Math.random() * options.length)])
     setFlyDir(dir)
     setIsDragging(false)
-    setTimeout(() => { setFlyDir(null); setDragX(0); onDone() }, 520)
+    setTimeout(() => { setFlyDir(null); setDragX(0); onDone() }, 420)
   }
 
   function handleLike() { flyOut('right', commitLike) }
@@ -222,8 +223,7 @@ export default function App() {
 
   function onMouseMove(e: React.MouseEvent) {
     if (!isDragging) return
-    const p = cardPersonalities[index] ?? { xSens: 1.8 }
-    setDragX((e.clientX - startX.current) * p.xSens)
+    setDragX((e.clientX - startX.current) * 1.8)
   }
 
   function onMouseUp() {
@@ -242,8 +242,7 @@ export default function App() {
 
   function onTouchMove(e: React.TouchEvent) {
     if (!isDragging) return
-    const p = cardPersonalities[index] ?? { xSens: 1.8 }
-    setDragX((e.touches[0].clientX - startX.current) * p.xSens)
+    setDragX((e.touches[0].clientX - startX.current) * 1.8)
   }
 
   function onTouchEnd() {
@@ -254,42 +253,24 @@ export default function App() {
     else setDragX(0)
   }
 
-  const p = cardPersonalities[index] ?? { rotMult: 0.18, yDrift: 0, xSens: 1.8 }
-  const cardRotation = dragX * p.rotMult
-  const cardY = dragX * p.yDrift
+  const cardRotation = dragX * 0.12
   const likeOpacity = Math.min(dragX / 100, 1)
   const nopeOpacity = Math.min(-dragX / 100, 1)
   const behindScale = 0.93 + Math.min(Math.abs(dragX) / 180, 1) * 0.07
 
-  const cardTransform = flyDir
-    ? flyTransform
-    : current.bouncy
-    ? `translateX(${dragX}px) translateY(${Math.sin(dragX * 0.08) * 40}px)`
-    : current.wobble
-    ? `translateX(${dragX * 0.6}px) translateY(${Math.sin(dragX * 0.15) * 18}px) rotate(${Math.sin(dragX * 0.12) * 22}deg)`
-    : current.tremble
-    ? `translateX(${dragX * 0.7}px) translateY(${Math.sin(dragX * 0.04) * 55}px) rotate(${Math.sin(dragX * 0.035) * 38}deg)`
-    : `translateX(${dragX}px) translateY(${cardY}px) rotate(${cardRotation}deg)`
+  const cardTransform = flyDir === 'right'
+    ? 'translateX(160vw) rotate(45deg)'
+    : flyDir === 'left'
+    ? 'translateX(-160vw) rotate(-45deg)'
+    : `translateX(${dragX}px) rotate(${cardRotation}deg)`
 
   const cardTransition = flyDir
-    ? 'transform 0.52s cubic-bezier(.4,0,.8,.2)'
-    : 'transform 0.08s cubic-bezier(.25,.8,.5,1.4)'
+    ? 'transform 0.42s ease-in'
+    : 'transform 0.08s ease-out'
 
   return (
     <div className="app-shell">
-      {/* Hidden SVG filter for wobble effect */}
-      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-        <defs>
-          <filter id="wobble-filter" x="-10%" y="-10%" width="120%" height="120%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.008" numOctaves="3" result="noise" seed="5">
-              <animate attributeName="baseFrequency" values="0.008 0.005;0.018 0.012;0.006 0.014;0.016 0.006;0.008 0.005" dur="6s" repeatCount="indefinite" />
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
-
-      {showSuperNeigh && <SuperNeighModal onClose={() => setShowSuperNeigh(false)} />}
+{showSuperNeigh && <SuperNeighModal onClose={() => setShowSuperNeigh(false)} />}
 
       {/* Glitch toast */}
       <div className={`glitch-toast ${glitchToast ? 'glitch-toast-visible' : ''}`}>
@@ -348,7 +329,7 @@ export default function App() {
                 <div
                   key={index}
                   ref={cardRef}
-                  className={`profile-card${current.wobble && isDragging ? ' card-wobble' : ''}`}
+                  className="profile-card"
                   style={{
                     transform: cardTransform,
                     transition: cardTransition,
