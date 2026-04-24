@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
+import { motion, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion'
 import './App.css'
 import horseSound from './assets/horse-sound-1.mp3'
 
@@ -9,6 +9,8 @@ import horse3 from './assets/horse-pics/horse-3.jpg'
 import horse4 from './assets/horse-pics/horse-4.jpg'
 import horse5 from './assets/horse-pics/horse-5.jpg'
 import horse6 from './assets/horse-pics/horse-6.jpg'
+import horse7 from './assets/horse-pics/horse-7.jpg'
+import horse8 from './assets/horse-pics/horse-8.jpg'
 import donkey1 from './assets/horse-pics/donkey-1.jpg'
 import donkey2 from './assets/horse-pics/donkey-2.jpg'
 import donkey3 from './assets/horse-pics/donkey-3.jpg'
@@ -19,7 +21,7 @@ import cappy1 from './assets/horse-pics/cappy-1.jpg'
 const profiles = [
   { id: 1,  species: 'horse',    name: 'Thunderhoof',    age: 6,  bio: 'Looking for someone to gallop into the sunset with. Will spook at plastic bags. Non-negotiable.', img: horse1 },
   { id: 2,  species: 'horse',    name: 'Princess Oatcake', age: 4, bio: 'Emotionally unavailable. Afraid of fences. My last relationship ended because he was "too stable". Never again.', img: horse2 },
-  { id: 3,  species: 'donkey',   name: 'Gerald',         age: 9,  bio: "I'm not like other donkeys. I have a podcast. It's about hay.", img: donkey1 },
+  { id: 3,  species: 'donkey',   name: 'Gerald',         age: 9,  bio: "Certified donkey. Long ears, strong opinions, elite bray control. I stop in doorways for dramatic effect and I do expect applause for carrying the emotional weight of this relationship.", img: donkey1 },
   { id: 4,  species: 'horse',    name: 'Blaze McSnort',  age: 7,  bio: 'Competitive eater. Professional napper. Once kicked a man just to see what would happen. Regrets nothing.', img: horse3 },
   { id: 5,  species: 'zebra',    name: 'Stripes',        age: 5,  bio: "Not a horse. Not going to explain further. Swipe right if you're open-minded. Swipe left if you're a lion.", img: zebra1 },
   { id: 6,  species: 'horse',    name: 'Cloppington III', age: 12, bio: 'Old money. Smells like saddle leather and regret. Currently in therapy. Progress is slow.', img: horse4 },
@@ -28,11 +30,8 @@ const profiles = [
   { id: 9,  species: 'horse',    name: 'Moonbeam',       age: 5,  bio: 'Vegan. Yes, I know. I eat grass. I am the most natural vegan on this app and I need you to respect that.', img: horse6 },
   { id: 10, species: 'donkey',   name: 'Brenda',         age: 11, bio: 'Second donkey on this app. Will not apologise. Looking for someone who accepts me as I am. Bray if you agree.', img: donkey3 },
   { id: 11, species: 'zebra',    name: 'Zigzag',         age: 4,  bio: "Yes I have stripes. No I won't explain. Yes I'm on a horse app. No I don't see the issue.", img: zebra2 },
-  { id: 14, species: 'horse',    name: 'Kevin',          age: 6,  bio: "My name is Kevin. I don't know why either. Looking for someone who won't make it weird.", img: horse3, flip: true },
-  { id: 15, species: 'horse',    name: 'Duchess Clops',  age: 9,  bio: "I have a lot of opinions about hay. Too many, probably. My ex said I was 'a lot'. He was right.", img: horse4, flip: true },
-  { id: 16, species: 'horse',    name: 'Springsworth',   age: 7,  bio: "People say I have a lot of energy. I don't know what they mean. I don't know what they mean. I don't know what they mean.", img: horse5, flip: true, bouncy: true },
-  { id: 17, species: 'horse',    name: 'Wobbles McGee',  age: 5,  bio: "My vet says I'm 'structurally fine'. My friends say I walk weird. We do not talk about it.", img: horse6, flip: true, wobble: true },
-  { id: 18, species: 'horse',    name: 'Trembles',       age: 8,  bio: "Always a little cold. Always a little nervous. Not sure what I'm looking for but I'll know when I see it. Probably.", img: horse1, tremble: true },
+  { id: 14, species: 'horse',    name: 'Kevin',          age: 6,  bio: "My name is Kevin. I don't know why either. Looking for someone who won't make it weird.", img: horse7, flip: true },
+  { id: 15, species: 'horse',    name: 'Duchess Clops',  age: 9,  bio: "I have a lot of opinions about hay. Too many, probably. My ex said I was 'a lot'. He was right.", img: horse8, flip: true },
   { id: 19, species: 'capybara', name: 'Fernando',       age: 6,  bio: "Largest rodent in the world. Very chill. Almost suspiciously chill. Not a horse but I feel like that's not the point. Are you okay? I'm okay.", img: cappy1 },
 ]
 
@@ -46,17 +45,15 @@ function shuffled<T>(arr: T[]): T[] {
 }
 
 function buildDeck() {
-  const springsworth = profiles.find(p => p.id === 16)!
-  const otherHorses   = shuffled(profiles.filter(p => p.species === 'horse' && p.id !== 16))
-  const nonHorses     = shuffled(profiles.filter(p => p.species === 'donkey' || p.species === 'zebra'))
-  const capybara      = profiles.find(p => p.species === 'capybara')!
+  const horses = shuffled(profiles.filter(p => p.species === 'horse'))
+  const firstDonkey = profiles.find(p => p.id === 3)!
+  const zebras = profiles.filter(p => p.species === 'zebra')
+  const capybara = profiles.find(p => p.species === 'capybara')!
 
-  const first4 = shuffled([springsworth, ...otherHorses.slice(0, 3)])
-  const rest = shuffled([...otherHorses.slice(3), ...nonHorses])
-  const capaPos = Math.floor(Math.random() * (rest.length - 1)) + 2
-  rest.splice(capaPos, 0, capybara)
+  const first4Horses = horses.slice(0, 4)
+  const remainingPool = shuffled([...horses.slice(4), ...zebras, capybara])
 
-  return [...first4, ...rest]
+  return [...first4Horses, firstDonkey, ...remainingPool]
 }
 
 const deck = buildDeck()
@@ -78,7 +75,6 @@ function CardContent({ p }: { p: Profile }) {
       <div className="profile-info">
         <div className="profile-name-row">
           <span className="profile-name">{p.name}</span>
-          <span className="profile-age">{p.age}</span>
         </div>
         <p className="profile-bio">{p.bio}</p>
         <span className="verified-badge">✔ verified horse™</span>
@@ -116,6 +112,91 @@ function SuperNeighModal({ onClose }: { onClose: () => void }) {
         </button>
       </div>
     </div>
+  )
+}
+
+function MatchModal({ profile, onClose }: { profile: Profile; onClose: () => void }) {
+  return (
+    <motion.div
+      className="modal-overlay match-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="match-box"
+        initial={{ scale: 0.7, y: 80, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        exit={{ scale: 0.7, y: 80, opacity: 0 }}
+        transition={{ type: 'spring', damping: 16, stiffness: 220 }}
+        onClick={e => e.stopPropagation()}
+      >
+        <motion.div
+          className="match-title"
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          IT'S A MATCH! 💘
+        </motion.div>
+
+        <motion.div
+          className="match-profile-pic"
+          style={{ backgroundImage: `url(${profile.img})` }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', delay: 0.2, damping: 12 }}
+        />
+
+        <motion.p
+          className="match-name"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35 }}
+        >
+          You and <strong>{profile.name}</strong> both neighed!
+        </motion.p>
+
+        <div className="match-glasses-row">
+          <motion.span
+            style={{ fontSize: 54, display: 'inline-block' }}
+            initial={{ x: -200, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: 'spring', damping: 7, stiffness: 110, delay: 0.45 }}
+          >
+            🥂
+          </motion.span>
+          <motion.span
+            style={{ fontSize: 54, display: 'inline-block', transform: 'scaleX(-1)' }}
+            initial={{ x: 200, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: 'spring', damping: 7, stiffness: 110, delay: 0.45 }}
+          >
+            🥂
+          </motion.span>
+        </div>
+
+        <motion.div
+          className="match-sparkles"
+          initial={{ opacity: 0, scale: 0.4 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.95, type: 'spring' }}
+        >
+          ✨ 🐴 ✨
+        </motion.div>
+
+        <motion.button
+          className="match-dismiss-btn"
+          onClick={onClose}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.85 }}
+        >
+          Keep Swiping 🐎
+        </motion.button>
+      </motion.div>
+    </motion.div>
   )
 }
 
@@ -178,6 +259,7 @@ export default function App() {
   const [lastAction, setLastAction] = useState<string | null>(null)
   const [matchedProfiles, setMatchedProfiles] = useState<Profile[]>([])
   const [showSuperNeigh, setShowSuperNeigh] = useState(false)
+  const [showMatchFor, setShowMatchFor] = useState<Profile | null>(null)
   const [activePage, setActivePage] = useState<'home' | 'likes'>('home')
   const [isSwiping, setIsSwiping] = useState(false)
 
@@ -209,10 +291,15 @@ export default function App() {
 
   function commitLike() {
     setLastAction('💚 Liked!')
-    setMatchedProfiles(prev => [...prev, deck[index]])
+    const likedProfile = deck[index]
+    setMatchedProfiles(prev => [...prev, likedProfile])
     const next = index + 1
     setIndex(next)
-    if (next >= deck.length) setTimeout(() => openSuperNeigh(), 400)
+    if (next >= deck.length) {
+      setTimeout(() => openSuperNeigh(), 400)
+    } else {
+      setShowMatchFor(likedProfile)
+    }
   }
 
   function commitNope() {
@@ -237,6 +324,9 @@ export default function App() {
   return (
     <div className="app-shell">
       {showSuperNeigh && <SuperNeighModal onClose={() => setShowSuperNeigh(false)} />}
+      <AnimatePresence>
+        {showMatchFor && <MatchModal profile={showMatchFor} onClose={() => setShowMatchFor(null)} />}
+      </AnimatePresence>
 
       {/* Header */}
       <div className="header">
