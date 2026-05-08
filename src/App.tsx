@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion'
 import './App.css'
 import horseSound from './assets/horse-sound-1.mp3'
@@ -60,6 +60,16 @@ const deck = buildDeck()
 
 type Profile = typeof profiles[0]
 
+type Notification = { id: number; profile: Profile; createdAt: number; read: boolean }
+
+function timeAgo(ts: number): string {
+  const secs = Math.floor((Date.now() - ts) / 1000)
+  if (secs < 60) return 'Just now'
+  const mins = Math.floor(secs / 60)
+  if (mins < 60) return `${mins}m ago`
+  return `${Math.floor(mins / 60)}h ago`
+}
+
 function CardContent({ p }: { p: Profile }) {
   return (
     <>
@@ -99,9 +109,9 @@ function SuperNeighModal({ onClose }: { onClose: () => void }) {
 
         <div className="modal-perks">
           <div className="perk-row">✅ Be seen by 3x more horses</div>
-          <div className="perk-row" style={{ fontSize: 9, color: '#aaa' }}>❓ Unlock "HayMode" (unclear what this does)</div>
+          <div className="perk-row" style={{ fontSize: 11, color: '#52525b' }}>❓ Unlock "HayMode" (unclear what this does)</div>
           <div className="perk-row">🌟 Gold hoof badge on your profile</div>
-          <div className="perk-row" style={{ textAlign: 'right', fontSize: 10 }}>🚫 No refunds. Ever.</div>
+          <div className="perk-row" style={{ textAlign: 'right', fontSize: 11, color: '#52525b' }}>🚫 No refunds. Ever.</div>
         </div>
 
         <button className="modal-buy-btn" onClick={() => { alert('Payment processing... \n\nERROR: HorseCoin wallet not found.\n\nPlease try again (you cannot try again)'); }}>
@@ -158,43 +168,75 @@ function MatchModal({ profile, onClose }: { profile: Profile; onClose: () => voi
           You and <strong>{profile.name}</strong> both neighed!
         </motion.p>
 
-        <div className="match-glasses-row">
-          <motion.span
-            style={{ fontSize: 54, display: 'inline-block' }}
-            initial={{ x: -200, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ type: 'spring', damping: 7, stiffness: 110, delay: 0.45 }}
-          >
-            🥂
-          </motion.span>
-          <motion.span
-            style={{ fontSize: 54, display: 'inline-block', transform: 'scaleX(-1)' }}
-            initial={{ x: 200, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ type: 'spring', damping: 7, stiffness: 110, delay: 0.45 }}
-          >
-            🥂
-          </motion.span>
-        </div>
-
-        <motion.div
-          className="match-sparkles"
-          initial={{ opacity: 0, scale: 0.4 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.95, type: 'spring' }}
-        >
-          ✨ 🐴 ✨
-        </motion.div>
-
         <motion.button
           className="match-dismiss-btn"
           onClick={onClose}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.85 }}
+          transition={{ delay: 0.55 }}
         >
           Keep Swiping 🐎
         </motion.button>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+function NotificationsPanel({
+  notifications,
+  onClose,
+  onLikeBack,
+}: {
+  notifications: Notification[]
+  onClose: () => void
+  onLikeBack: (profile: Profile) => void
+}) {
+  return (
+    <motion.div
+      className="notif-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="notif-backdrop" onClick={onClose} />
+      <motion.div
+        className="notif-panel"
+        initial={{ y: '-100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '-100%' }}
+        transition={{ type: 'spring', damping: 30, stiffness: 340 }}
+      >
+        <div className="notif-header">
+          <span className="notif-header-title">Notifications</span>
+          <button className="notif-close-btn" onClick={onClose}>✕</button>
+        </div>
+
+        {notifications.length === 0 ? (
+          <div className="notif-empty">
+            <div style={{ fontSize: 36 }}>🔔</div>
+            <p style={{ color: '#71717a', fontSize: 13, marginTop: 8 }}>No notifications yet</p>
+          </div>
+        ) : (
+          notifications.map(n => (
+            <div key={n.id} className={`notif-row${n.read ? '' : ' notif-unread'}`}>
+              <img
+                src={n.profile.img}
+                alt={n.profile.name}
+                className="notif-thumb"
+                style={n.profile.flip ? { transform: 'scaleX(-1)' } : undefined}
+              />
+              <div className="notif-info">
+                <span className="notif-text">
+                  <strong>{n.profile.name}</strong> liked you!
+                </span>
+                <span className="notif-time">{timeAgo(n.createdAt)}</span>
+              </div>
+              <button className="notif-like-btn" onClick={() => onLikeBack(n.profile)}>
+                Like back
+              </button>
+            </div>
+          ))
+        )}
       </motion.div>
     </motion.div>
   )
@@ -204,43 +246,36 @@ function LikesPage({ matchedProfiles }: { matchedProfiles: Profile[] }) {
   return (
     <div className="likes-page">
       <div className="likes-header">
-        <span style={{ fontSize: 11, color: '#ff00aa' }}>YOUR</span>
-        <h2 style={{ fontSize: 31, color: 'white', marginTop: -4 }}>Matches 💘</h2>
-        <span style={{ fontSize: 9, color: '#666', display: 'block', marginTop: -2 }}>
+        <span style={{ fontSize: 11, color: '#a1a1aa', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Your</span>
+        <h2 style={{ fontSize: 26, color: '#18181b', fontWeight: 700, letterSpacing: '-0.3px' }}>Matches 💘</h2>
+        <span style={{ fontSize: 11, color: '#a1a1aa', display: 'block' }}>
           (results may vary)
         </span>
       </div>
 
       {matchedProfiles.length === 0 ? (
         <div className="likes-empty">
-          <div style={{ fontSize: 50 }}>🦗</div>
-          <p style={{ color: '#ff69b4', fontSize: 18, marginTop: 8 }}>Nothing here yet</p>
-          <p style={{ color: '#555', fontSize: 10 }}>Go swipe on some horses, mate</p>
+          <div style={{ fontSize: 48 }}>🦗</div>
+          <p style={{ color: '#18181b', fontSize: 16, fontWeight: 600 }}>Nothing here yet</p>
+          <p style={{ color: '#a1a1aa', fontSize: 12 }}>Go swipe on some horses, mate</p>
         </div>
       ) : (
         <div className="likes-list">
           {matchedProfiles.map((p, i) => (
-            <div key={`${p.id}-${i}`} className="likes-row" style={{
-              background: i % 2 === 0 ? '#1a0033' : '#0a1a00',
-              borderLeft: i % 3 === 0 ? '4px solid #ff00aa' : i % 3 === 1 ? '4px solid lime' : '4px solid #ff6600',
-            }}>
+            <div key={`${p.id}-${i}`} className="likes-row">
               <img src={p.img} alt={p.name} className="likes-thumb" style={{
-                borderRadius: i % 2 === 0 ? '50%' : '4px',
-                width: i % 3 === 0 ? 52 : 44,
-                height: i % 3 === 0 ? 52 : 44,
+                borderRadius: '50%',
+                width: 48,
+                height: 48,
+                objectFit: 'cover',
               }} />
               <div className="likes-info">
-                <span className="likes-name" style={{ fontSize: i % 2 === 0 ? 17 : 13 }}>{p.name}</span>
+                <span className="likes-name">{p.name}</span>
                 <span className="likes-age">aged {p.age}</span>
-                <span className="likes-bio-snippet">{p.bio.slice(0, 38)}...</span>
+                <span className="likes-bio-snippet">{p.bio.slice(0, 48)}...</span>
               </div>
-              <button className="likes-msg-btn" style={{
-                background: i % 2 === 0 ? '#ff00aa' : 'neongreen',
-                color: i % 2 === 0 ? 'white' : 'black',
-                fontSize: i % 3 === 0 ? 11 : 8,
-                padding: i % 2 === 0 ? '6px 10px' : '4px 6px',
-              }} onClick={() => alert(`Messaging ${p.name}...\n\nERROR: Messages cost 50 HorseCoin per word.`)}>
-                {i % 2 === 0 ? '💬 MSG' : 'say hi'}
+              <button className="likes-msg-btn" onClick={() => alert(`Messaging ${p.name}...\n\nERROR: Messages cost 50 HorseCoin per word.`)}>
+                Message
               </button>
             </div>
           ))}
@@ -262,6 +297,10 @@ export default function App() {
   const [showMatchFor, setShowMatchFor] = useState<Profile | null>(null)
   const [activePage, setActivePage] = useState<'home' | 'likes'>('home')
   const [isSwiping, setIsSwiping] = useState(false)
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [bellShaking, setBellShaking] = useState(false)
+  const notifTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const x = useMotionValue(0)
   const rotate = useTransform(x, [-250, 250], [-20, 20])
@@ -275,6 +314,35 @@ export default function App() {
       void img.decode?.().catch(() => {})
     }
   }, [])
+
+  // Auto-generate "liked you" notifications from random profiles
+  useEffect(() => {
+    const used = new Set<number>()
+    let count = 0
+
+    function schedule() {
+      notifTimerRef.current = setTimeout(() => {
+        const available = profiles.filter(p => !used.has(p.id))
+        if (available.length === 0 || count >= 6) return
+        const profile = available[Math.floor(Math.random() * available.length)]
+        used.add(profile.id)
+        count++
+        setNotifications(prev => [{ id: Date.now(), profile, createdAt: Date.now(), read: false }, ...prev])
+        if (count < 6) schedule()
+      }, 5000 + Math.random() * 8000)
+    }
+
+    schedule()
+    return () => { if (notifTimerRef.current) clearTimeout(notifTimerRef.current) }
+  }, [])
+
+  // Shake the bell whenever a new notification arrives
+  useEffect(() => {
+    if (notifications.length === 0) return
+    setBellShaking(true)
+    const t = setTimeout(() => setBellShaking(false), 600)
+    return () => clearTimeout(t)
+  }, [notifications.length])
 
   useLayoutEffect(() => {
     x.set(0)
@@ -321,25 +389,43 @@ export default function App() {
   function handleLike() { doSwipe('right', commitLike) }
   function handleNope() { doSwipe('left', commitNope) }
 
+  function openNotifications() {
+    setShowNotifications(true)
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })))
+  }
+
+  function handleLikeBack(profile: Profile) {
+    setShowNotifications(false)
+    setMatchedProfiles(prev => [...prev, profile])
+    setShowMatchFor(profile)
+  }
+
+  const unreadCount = notifications.filter(n => !n.read).length
+
   return (
     <div className="app-shell">
       {showSuperNeigh && <SuperNeighModal onClose={() => setShowSuperNeigh(false)} />}
       <AnimatePresence>
         {showMatchFor && <MatchModal profile={showMatchFor} onClose={() => setShowMatchFor(null)} />}
       </AnimatePresence>
+      <AnimatePresence>
+        {showNotifications && (
+          <NotificationsPanel
+            notifications={notifications}
+            onClose={() => setShowNotifications(false)}
+            onLikeBack={handleLikeBack}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Header */}
       <div className="header">
-        <span style={{ fontSize: '11px', color: '#aaa', marginLeft: 3 }}>v0.0.1b</span>
+        <span style={{ fontSize: 11, color: '#a1a1aa' }}>v0.0.1b</span>
         <h1 className="app-title">🐴 HorseMatch</h1>
-        <div style={{ fontSize: '22px', marginRight: 8 }}>🔔</div>
-      </div>
-
-      {/* Boost bar */}
-      <div className="boost-bar">
-        <span style={{ fontSize: '9px' }}>BOOST ACTIVE</span>
-        <div className="boost-progress"><div className="boost-fill" /></div>
-        <span style={{ fontSize: '9px', color: 'lime' }}>∞ left</span>
+        <div className="notif-bell-wrap" onClick={openNotifications}>
+          <span className={bellShaking ? 'bell-shake' : ''} style={{ fontSize: 20 }}>🔔</span>
+          {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+        </div>
       </div>
 
       {activePage === 'likes' ? (
@@ -350,11 +436,11 @@ export default function App() {
           <div className="card-area">
             {isDone ? (
               <div className="done-card">
-                <div style={{ fontSize: 60 }}>🐎</div>
-                <p style={{ fontSize: 22, fontWeight: 'bold', color: '#ff69b4' }}>No more horses!</p>
-                <p style={{ fontSize: 11, color: '#888', marginTop: -8 }}>you've seen them all (maybe)</p>
-                <button className="btn-like" style={{ marginTop: 20, width: '80%' }} onClick={() => setIndex(0)}>
-                  start over i guess
+                <div style={{ fontSize: 52 }}>🐎</div>
+                <p style={{ fontSize: 20, fontWeight: 700, color: '#18181b', marginTop: 12 }}>No more horses!</p>
+                <p style={{ fontSize: 12, color: '#a1a1aa', marginTop: 4 }}>you've seen them all (maybe)</p>
+                <button className="btn-like" style={{ marginTop: 24, width: '80%', height: 48, transform: 'none' }} onClick={() => setIndex(0)}>
+                  Start over
                 </button>
               </div>
             ) : (
@@ -409,18 +495,18 @@ export default function App() {
           {/* Action buttons */}
           {!isDone && (
             <div className="action-row">
-              <button className="btn-nope" onClick={handleNope} style={{ height: 54 }}>✕ NOPE</button>
-              <button className="btn-superlike" style={{ height: 44, fontSize: 10 }} onClick={openSuperNeigh}>
-                ⭐<br/>super
+              <button className="btn-nope" onClick={handleNope} style={{ height: 52 }}>✕ Nope</button>
+              <button className="btn-superlike" style={{ height: 44 }} onClick={openSuperNeigh}>
+                ⭐<br/><span style={{ fontSize: 9 }}>super</span>
               </button>
-              <button className="btn-like" onClick={handleLike} style={{ height: 60 }}>LIKE ♥</button>
+              <button className="btn-like" onClick={handleLike} style={{ height: 58 }}>Like ♥</button>
             </div>
           )}
 
           {/* Last action feedback */}
           <div className="last-action">
-            {lastAction && <span>{lastAction}</span>}
-            <span style={{ fontSize: 9, color: '#999', marginLeft: 30 }}>matches: {matchedProfiles.length}</span>
+            {lastAction && <span style={{ color: '#71717a' }}>{lastAction}</span>}
+            <span style={{ color: '#a1a1aa', fontSize: 11 }}>matches: {matchedProfiles.length}</span>
           </div>
         </>
       )}
@@ -431,18 +517,17 @@ export default function App() {
           🏠<span>Home</span>
         </div>
         <div className={`nav-item nav-likes ${activePage === 'likes' ? 'active-nav' : ''}`} onClick={() => setActivePage('likes')}>
-          <span style={{ fontFamily: 'serif', fontSize: 20 }}>♡</span>
-          <span>LIKES</span>
+          <span style={{ fontSize: 20 }}>♡</span>
+          <span>Likes</span>
         </div>
         <div className="nav-item nav-messages">
-          💬<span style={{ fontSize: 8 }}>Messages</span>
+          💬<span>Messages</span>
         </div>
         <div className="nav-item nav-me">
-          <img src="https://img.icons8.com/ios/20/user-male-circle.png" alt="profile" style={{ width: 18, filter: 'invert(0)' }} />
-          <span>Me</span>
+          👤<span>Me</span>
         </div>
         <div className="nav-item nav-settings">
-          ⚙️<span>settings</span>
+          ⚙️<span>Settings</span>
         </div>
       </div>
     </div>
