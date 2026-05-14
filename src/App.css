@@ -195,6 +195,7 @@
   align-items: center;
   gap: 12px;
   padding: 2px 20px 6px;
+  margin: -32px 0 32px 0;
 }
 
 .btn-nope {
