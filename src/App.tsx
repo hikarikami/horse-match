@@ -493,10 +493,8 @@ export default function App() {
           {!isDone && (
             <div className="action-row">
               <button className="btn-nope" onClick={handleNope} style={{ height: 52 }}>✕ Nope</button>
-              <button className="btn-superlike" style={{ height: 44 }} onClick={openSuperNeigh}>
-                ⭐<br/><span style={{ fontSize: 11 }}>super</span>
-              </button>
-              <button className="btn-like" onClick={handleLike} style={{ height: 58 }}>Like ♥</button>
+              <button className="btn-superlike" style={{ height: 52 }} onClick={openSuperNeigh}>⭐</button>
+              <button className="btn-like" onClick={handleLike} style={{ height: 52 }}>Like ♥</button>
             </div>
           )}
 
