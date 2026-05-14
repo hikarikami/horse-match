@@ -2,7 +2,7 @@
 .app-shell {
   width: 100%;
   height: 100dvh;
-  background: #f4f4f5;
+  background: #F3F2EE;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -15,16 +15,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: 12px 16px;
   background: #ffffff;
-  border-bottom: 1px solid #e4e4e7;
+  border-bottom: 1px solid #E0DFDC;
 }
 
 .app-title {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
-  color: #18181b;
-  letter-spacing: -0.5px;
+  color: #0A66C2;
+  letter-spacing: -0.3px;
 }
 
 
@@ -52,9 +52,9 @@
   inset: 0;
   z-index: 0;
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
   will-change: transform;
@@ -139,14 +139,14 @@
   top: 12px;
   right: 12px;
   background: #ffffff;
-  color: #71717a;
+  color: #0A66C2;
   font-size: 11px;
   font-weight: 600;
   padding: 3px 8px;
-  border-radius: 20px;
+  border-radius: 4px;
   letter-spacing: 0.4px;
   z-index: 5;
-  border: 1px solid #e4e4e7;
+  border: 1px solid #0A66C2;
 }
 
 /* ── Swipe labels ── */
@@ -165,15 +165,15 @@
 
 .like-label {
   left: 16px;
-  color: #22c55e;
-  border-color: #22c55e;
+  color: #0A66C2;
+  border-color: #0A66C2;
   transform: rotate(-10deg);
 }
 
 .nope-label {
   right: 16px;
-  color: #f43f5e;
-  border-color: #f43f5e;
+  color: #666666;
+  border-color: #666666;
   transform: rotate(10deg);
 }
 
@@ -181,11 +181,11 @@
 .done-card {
   text-align: center;
   padding: 40px 20px;
-  color: #18181b;
+  color: #000000;
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 8px;
   width: 100%;
-  border: 1px solid #e4e4e7;
+  border: 1px solid #E0DFDC;
 }
 
 /* ── Action buttons ── */
@@ -200,10 +200,10 @@
 
 .btn-nope {
   background: #ffffff;
-  color: #71717a;
-  border: 1px solid #e4e4e7;
-  border-radius: 50px;
-  font-size: 18px;
+  color: #666666;
+  border: 1px solid #C9C9C9;
+  border-radius: 24px;
+  font-size: 15px;
   font-weight: 600;
   padding: 0 22px;
   cursor: pointer;
@@ -211,11 +211,11 @@
 }
 
 .btn-like {
-  background: #fb7185;
+  background: #0A66C2;
   color: #fff;
   border: none;
-  border-radius: 50px;
-  font-size: 19px;
+  border-radius: 24px;
+  font-size: 15px;
   font-weight: 600;
   padding: 0 22px;
   cursor: pointer;
@@ -224,14 +224,15 @@
 
 .btn-superlike {
   background: #ffffff;
-  color: #f59e0b;
-  border: 1px solid #e4e4e7;
-  border-radius: 50px;
-  font-size: 19px;
+  color: #666666;
+  border: 1px solid #C9C9C9;
+  border-radius: 24px;
+  font-size: 15px;
   cursor: pointer;
   width: 60px;
   line-height: 1.1;
   padding: 4px 0;
+  font-weight: 600;
 }
 
 /* ── Bottom nav ── */
@@ -244,7 +245,7 @@
   justify-content: space-around;
   align-items: center;
   background: #ffffff;
-  border-top: 1px solid #e4e4e7;
+  border-top: 1px solid #E0DFDC;
   padding: 10px 0 14px;
   z-index: 100;
 }
@@ -253,26 +254,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 23px;
-  color: #a1a1aa;
+  font-size: 22px;
+  color: #666666;
   gap: 3px;
   cursor: pointer;
   padding: 0 6px;
 }
 
 .nav-item span {
-  font-size: 12px;
-  color: #a1a1aa;
+  font-size: 11px;
+  color: #666666;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
 
 .active-nav {
-  color: #fb7185;
+  color: #0A66C2;
 }
 
 .active-nav span {
-  color: #fb7185;
+  color: #0A66C2;
 }
 
 /* ── Notification bell ── */
@@ -289,7 +290,7 @@
   position: absolute;
   top: -2px;
   right: -2px;
-  background: #fb7185;
+  background: #CC1016;
   color: #fff;
   font-size: 12px;
   font-weight: 700;
@@ -338,8 +339,8 @@
   left: 0;
   right: 0;
   background: #ffffff;
-  border-radius: 0 0 20px 20px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
   max-height: 70vh;
   overflow-y: auto;
   pointer-events: all;
@@ -350,7 +351,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 52px 16px 12px;
-  border-bottom: 1px solid #e4e4e7;
+  border-bottom: 1px solid #E0DFDC;
   position: sticky;
   top: 0;
   background: #ffffff;
@@ -391,7 +392,7 @@
 }
 
 .notif-unread {
-  background: #fff5f6;
+  background: #EEF3F8;
 }
 
 .notif-thumb {
@@ -425,10 +426,10 @@
 }
 
 .notif-like-btn {
-  background: #fb7185;
+  background: #0A66C2;
   color: #fff;
   border: none;
-  border-radius: 20px;
+  border-radius: 16px;
   font-size: 14px;
   font-weight: 600;
   padding: 6px 12px;
@@ -453,33 +454,33 @@
 /* ── SuperNeigh Modal ── */
 .modal-box {
   background: #ffffff;
-  border: 1px solid #e4e4e7;
-  border-radius: 20px;
+  border: 1px solid #E0DFDC;
+  border-radius: 8px;
   padding: 24px 18px 18px;
   width: 90%;
   max-width: 340px;
   text-align: center;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .modal-title {
-  font-size: 33px;
-  font-weight: 800;
-  color: #f59e0b;
-  letter-spacing: 1px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #0A66C2;
+  letter-spacing: 0px;
 }
 
 .modal-subtitle {
   font-size: 13px;
-  color: #a1a1aa;
+  color: #666666;
   margin-bottom: 14px;
 }
 
 .marquee-wrap {
   overflow: hidden;
-  background: #fafafa;
-  border: 1px solid #e4e4e7;
-  border-radius: 6px;
+  background: #F3F2EE;
+  border: 1px solid #E0DFDC;
+  border-radius: 4px;
   padding: 6px 0;
   margin-bottom: 14px;
 }
@@ -487,7 +488,7 @@
 .marquee-track {
   display: inline-block;
   white-space: nowrap;
-  color: #f59e0b;
+  color: #0A66C2;
   font-size: 14px;
   font-weight: 600;
   animation: marquee-scroll 12s linear infinite;
@@ -514,16 +515,16 @@
 
 .modal-buy-btn {
   width: 100%;
-  background: #f59e0b;
+  background: #0A66C2;
   color: #ffffff;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   border: none;
-  border-radius: 50px;
+  border-radius: 24px;
   padding: 13px;
   cursor: pointer;
   margin-bottom: 10px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0px;
 }
 
 .modal-close-btn {
@@ -538,26 +539,26 @@
 /* ── Match Modal ── */
 .match-overlay {
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .match-box {
   background: #ffffff;
-  border: 1px solid #e4e4e7;
-  border-radius: 24px;
+  border: 1px solid #E0DFDC;
+  border-radius: 8px;
   padding: 28px 20px 22px;
   width: 88%;
   max-width: 340px;
   text-align: center;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .match-title {
-  font-size: 31px;
-  font-weight: 800;
-  color: #18181b;
-  letter-spacing: -0.3px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0A66C2;
+  letter-spacing: -0.2px;
   margin-bottom: 16px;
 }
 
@@ -565,7 +566,7 @@
   width: 88px;
   height: 88px;
   border-radius: 50%;
-  border: 3px solid #fb7185;
+  border: 3px solid #0A66C2;
   background-size: cover;
   background-position: center;
   margin: 0 auto 14px;
@@ -585,12 +586,12 @@
 
 .match-dismiss-btn {
   width: 100%;
-  background: #fb7185;
+  background: #0A66C2;
   color: #fff;
   border: none;
-  border-radius: 50px;
+  border-radius: 24px;
   padding: 13px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -601,13 +602,13 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #f4f4f5;
+  background: #F3F2EE;
 }
 
 .likes-header {
   padding: 16px 16px 10px;
   background: #ffffff;
-  border-bottom: 1px solid #e4e4e7;
+  border-bottom: 1px solid #E0DFDC;
 }
 
 .likes-empty {
@@ -668,23 +669,23 @@
 }
 
 .likes-msg-btn {
-  border: 1px solid #e4e4e7;
-  border-radius: 20px;
+  border: 1.5px solid #0A66C2;
+  border-radius: 16px;
   cursor: pointer;
   font-weight: 600;
   flex-shrink: 0;
   background: transparent;
-  color: #71717a;
+  color: #0A66C2;
   font-size: 14px;
   padding: 6px 12px;
 }
 
 .likes-footer-note {
   font-size: 12px;
-  color: #a1a1aa;
+  color: #999999;
   text-align: center;
   padding: 8px 12px;
   background: #ffffff;
-  border-top: 1px solid #e4e4e7;
+  border-top: 1px solid #E0DFDC;
   font-style: italic;
 }

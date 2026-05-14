@@ -98,8 +98,8 @@ function SuperNeighModal({ onClose }: { onClose: () => void }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box" onClick={e => e.stopPropagation()}>
         <div style={{ fontSize: 61, marginBottom: 4 }}>⭐🐴⭐</div>
-        <h2 className="modal-title">SUPERNEIGH™</h2>
-        <p className="modal-subtitle">Premium Horse Dating Technology</p>
+        <h2 className="modal-title">SuperNeigh Premium</h2>
+        <p className="modal-subtitle">Premium Horse Networking Technology</p>
 
         <div className="marquee-wrap">
           <div className="marquee-track">
@@ -148,7 +148,7 @@ function MatchModal({ profile, onClose }: { profile: Profile; onClose: () => voi
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
         >
-          IT'S A MATCH! 💘
+          New Connection!
         </motion.div>
 
         <motion.div
@@ -165,7 +165,7 @@ function MatchModal({ profile, onClose }: { profile: Profile; onClose: () => voi
           animate={{ opacity: 1 }}
           transition={{ delay: 0.35 }}
         >
-          You and <strong>{profile.name}</strong> both neighed!
+          You connected with <strong>{profile.name}</strong>
         </motion.p>
 
         <motion.button
@@ -175,7 +175,7 @@ function MatchModal({ profile, onClose }: { profile: Profile; onClose: () => voi
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
         >
-          Keep Swiping 🐎
+          Continue Browsing
         </motion.button>
       </motion.div>
     </motion.div>
@@ -246,18 +246,18 @@ function LikesPage({ matchedProfiles }: { matchedProfiles: Profile[] }) {
   return (
     <div className="likes-page">
       <div className="likes-header">
-        <span style={{ fontSize: 13, color: '#a1a1aa', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Your</span>
-        <h2 style={{ fontSize: 31, color: '#18181b', fontWeight: 700, letterSpacing: '-0.3px' }}>Matches 💘</h2>
-        <span style={{ fontSize: 13, color: '#a1a1aa', display: 'block' }}>
+        <span style={{ fontSize: 13, color: '#999999', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Your</span>
+        <h2 style={{ fontSize: 26, color: '#000000', fontWeight: 700, letterSpacing: '-0.2px' }}>Connections</h2>
+        <span style={{ fontSize: 13, color: '#999999', display: 'block' }}>
           (results may vary)
         </span>
       </div>
 
       {matchedProfiles.length === 0 ? (
         <div className="likes-empty">
-          <div style={{ fontSize: 56 }}>🦗</div>
-          <p style={{ color: '#18181b', fontSize: 19, fontWeight: 600 }}>Nothing here yet</p>
-          <p style={{ color: '#a1a1aa', fontSize: 14 }}>Go swipe on some horses, mate</p>
+          <div style={{ fontSize: 40, color: '#999999' }}>—</div>
+          <p style={{ color: '#000000', fontSize: 17, fontWeight: 600 }}>No connections yet</p>
+          <p style={{ color: '#999999', fontSize: 14 }}>Start browsing to grow your network</p>
         </div>
       ) : (
         <div className="likes-list">
@@ -417,10 +417,12 @@ export default function App() {
 
       {/* Header */}
       <div className="header">
-        <span style={{ fontSize: 13, color: '#a1a1aa' }}>v0.0.1b</span>
-        <h1 className="app-title">🐴 HorseMatch</h1>
+        <span style={{ fontSize: 13, color: '#999999' }}>v0.0.1b</span>
+        <h1 className="app-title">HorseMatch</h1>
         <div className="notif-bell-wrap" onClick={openNotifications}>
-          <span className={bellShaking ? 'bell-shake' : ''} style={{ fontSize: 23 }}>🔔</span>
+          <span className={bellShaking ? 'bell-shake' : ''} style={{ display: 'flex', color: '#666666' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          </span>
           {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
         </div>
       </div>
@@ -433,11 +435,11 @@ export default function App() {
           <div className="card-area">
             {isDone ? (
               <div className="done-card">
-                <div style={{ fontSize: 61 }}>🐎</div>
-                <p style={{ fontSize: 23, fontWeight: 700, color: '#18181b', marginTop: 12 }}>No more horses!</p>
-                <p style={{ fontSize: 14, color: '#a1a1aa', marginTop: 4 }}>you've seen them all (maybe)</p>
+                <div style={{ fontSize: 40, color: '#999999' }}>—</div>
+                <p style={{ fontSize: 20, fontWeight: 700, color: '#000000', marginTop: 12 }}>You've reached the end</p>
+                <p style={{ fontSize: 14, color: '#999999', marginTop: 4 }}>You've reviewed all available profiles</p>
                 <button className="btn-like" style={{ marginTop: 24, width: '80%', height: 48, transform: 'none' }} onClick={() => setIndex(0)}>
-                  Start over
+                  Browse again
                 </button>
               </div>
             ) : (
@@ -481,8 +483,8 @@ export default function App() {
                     else if (info.offset.x < -80 || info.velocity.x < -400) doSwipe('left', commitNope)
                   }}
                 >
-                  <motion.div className="swipe-label like-label" style={{ opacity: likeOpacity }}>NEIGH ✅</motion.div>
-                  <motion.div className="swipe-label nope-label" style={{ opacity: nopeOpacity }}>NOPE 🚫</motion.div>
+                  <motion.div className="swipe-label like-label" style={{ opacity: likeOpacity }}>CONNECT</motion.div>
+                  <motion.div className="swipe-label nope-label" style={{ opacity: nopeOpacity }}>PASS</motion.div>
                   <CardContent p={current} />
                 </motion.div>
               </div>
@@ -492,9 +494,9 @@ export default function App() {
           {/* Action buttons */}
           {!isDone && (
             <div className="action-row">
-              <button className="btn-nope" onClick={handleNope} style={{ height: 52 }}>✕ Nope</button>
-              <button className="btn-superlike" style={{ height: 52 }} onClick={openSuperNeigh}>⭐</button>
-              <button className="btn-like" onClick={handleLike} style={{ height: 52 }}>Like ♥</button>
+              <button className="btn-nope" onClick={handleNope} style={{ height: 52 }}>Pass</button>
+              <button className="btn-superlike" style={{ height: 52 }} onClick={openSuperNeigh}>★</button>
+              <button className="btn-like" onClick={handleLike} style={{ height: 52 }}>Connect</button>
             </div>
           )}
 
@@ -504,20 +506,24 @@ export default function App() {
       {/* Bottom nav */}
       <div className="bottom-nav">
         <div className={`nav-item ${activePage === 'home' ? 'active-nav' : ''}`} onClick={() => setActivePage('home')}>
-          🏠<span>Home</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <span>Home</span>
         </div>
         <div className={`nav-item nav-likes ${activePage === 'likes' ? 'active-nav' : ''}`} onClick={() => setActivePage('likes')}>
-          <span style={{ fontSize: 23 }}>♡</span>
-          <span>Likes</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          <span>Network</span>
         </div>
         <div className="nav-item nav-messages">
-          💬<span>Messages</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          <span>Messages</span>
         </div>
         <div className="nav-item nav-me">
-          👤<span>Me</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <span>Me</span>
         </div>
         <div className="nav-item nav-settings">
-          ⚙️<span>Settings</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+          <span>More</span>
         </div>
       </div>
     </div>
