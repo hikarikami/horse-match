@@ -41,7 +41,7 @@
 .card-stack {
   position: relative;
   width: 100%;
-  height: 95%;
+  height: 85%;
   isolation: isolate;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
