@@ -1,22 +1,22 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion'
 import './App.css'
-import horseSound from './assets/horse-sound-1.mp3'
+import horseSound from './assets/pics-sounds/horse-sound-1.mp3'
 
-import horse1 from './assets/horse-pics/horse-1.jpg'
-import horse2 from './assets/horse-pics/horse-2.jpg'
-import horse3 from './assets/horse-pics/horse-3.jpg'
-import horse4 from './assets/horse-pics/horse-4.jpg'
-import horse5 from './assets/horse-pics/horse-5.jpg'
-import horse6 from './assets/horse-pics/horse-6.jpg'
-import horse7 from './assets/horse-pics/horse-7.jpg'
-import horse8 from './assets/horse-pics/horse-8.jpg'
-import donkey1 from './assets/horse-pics/donkey-1.jpg'
-import donkey2 from './assets/horse-pics/donkey-2.jpg'
-import donkey3 from './assets/horse-pics/donkey-3.jpg'
-import zebra1 from './assets/horse-pics/zebra-1.jpg'
-import zebra2 from './assets/horse-pics/zebra-2.jpg'
-import cappy1 from './assets/horse-pics/cappy-1.jpg'
+import horse1 from './assets/pics-sounds/horse-1.jpg'
+import horse2 from './assets/pics-sounds/horse-2.jpg'
+import horse3 from './assets/pics-sounds/horse-3.jpg'
+import horse4 from './assets/pics-sounds/horse-4.jpg'
+import horse5 from './assets/pics-sounds/horse-5.jpg'
+import horse6 from './assets/pics-sounds/horse-6.jpg'
+import horse7 from './assets/pics-sounds/horse-7.jpg'
+import horse8 from './assets/pics-sounds/horse-8.jpg'
+import donkey1 from './assets/pics-sounds/donkey-1.jpg'
+import donkey2 from './assets/pics-sounds/donkey-2.jpg'
+import donkey3 from './assets/pics-sounds/donkey-3.jpg'
+import zebra1 from './assets/pics-sounds/zebra-1.jpg'
+import zebra2 from './assets/pics-sounds/zebra-2.jpg'
+import cappy1 from './assets/pics-sounds/cappy-1.jpg'
 
 const profiles = [
   { id: 1,  species: 'horse',    name: 'Thunderhoof',    age: 6,  bio: 'Looking for someone to gallop into the sunset with. Will spook at plastic bags. Non-negotiable.', img: horse1 },
@@ -97,7 +97,7 @@ function SuperNeighModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box" onClick={e => e.stopPropagation()}>
-        <div style={{ fontSize: 52, marginBottom: 4 }}>⭐🐴⭐</div>
+        <div style={{ fontSize: 61, marginBottom: 4 }}>⭐🐴⭐</div>
         <h2 className="modal-title">SUPERNEIGH™</h2>
         <p className="modal-subtitle">Premium Horse Dating Technology</p>
 
@@ -109,9 +109,9 @@ function SuperNeighModal({ onClose }: { onClose: () => void }) {
 
         <div className="modal-perks">
           <div className="perk-row">✅ Be seen by 3x more horses</div>
-          <div className="perk-row" style={{ fontSize: 11, color: '#52525b' }}>❓ Unlock "HayMode" (unclear what this does)</div>
+          <div className="perk-row" style={{ fontSize: 13, color: '#52525b' }}>❓ Unlock "HayMode" (unclear what this does)</div>
           <div className="perk-row">🌟 Gold hoof badge on your profile</div>
-          <div className="perk-row" style={{ textAlign: 'right', fontSize: 11, color: '#52525b' }}>🚫 No refunds. Ever.</div>
+          <div className="perk-row" style={{ textAlign: 'right', fontSize: 13, color: '#52525b' }}>🚫 No refunds. Ever.</div>
         </div>
 
         <button className="modal-buy-btn" onClick={() => { alert('Payment processing... \n\nERROR: HorseCoin wallet not found.\n\nPlease try again (you cannot try again)'); }}>
@@ -213,8 +213,8 @@ function NotificationsPanel({
 
         {notifications.length === 0 ? (
           <div className="notif-empty">
-            <div style={{ fontSize: 36 }}>🔔</div>
-            <p style={{ color: '#71717a', fontSize: 13, marginTop: 8 }}>No notifications yet</p>
+            <div style={{ fontSize: 42 }}>🔔</div>
+            <p style={{ color: '#71717a', fontSize: 15, marginTop: 8 }}>No notifications yet</p>
           </div>
         ) : (
           notifications.map(n => (
@@ -246,18 +246,18 @@ function LikesPage({ matchedProfiles }: { matchedProfiles: Profile[] }) {
   return (
     <div className="likes-page">
       <div className="likes-header">
-        <span style={{ fontSize: 11, color: '#a1a1aa', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Your</span>
-        <h2 style={{ fontSize: 26, color: '#18181b', fontWeight: 700, letterSpacing: '-0.3px' }}>Matches 💘</h2>
-        <span style={{ fontSize: 11, color: '#a1a1aa', display: 'block' }}>
+        <span style={{ fontSize: 13, color: '#a1a1aa', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Your</span>
+        <h2 style={{ fontSize: 31, color: '#18181b', fontWeight: 700, letterSpacing: '-0.3px' }}>Matches 💘</h2>
+        <span style={{ fontSize: 13, color: '#a1a1aa', display: 'block' }}>
           (results may vary)
         </span>
       </div>
 
       {matchedProfiles.length === 0 ? (
         <div className="likes-empty">
-          <div style={{ fontSize: 48 }}>🦗</div>
-          <p style={{ color: '#18181b', fontSize: 16, fontWeight: 600 }}>Nothing here yet</p>
-          <p style={{ color: '#a1a1aa', fontSize: 12 }}>Go swipe on some horses, mate</p>
+          <div style={{ fontSize: 56 }}>🦗</div>
+          <p style={{ color: '#18181b', fontSize: 19, fontWeight: 600 }}>Nothing here yet</p>
+          <p style={{ color: '#a1a1aa', fontSize: 14 }}>Go swipe on some horses, mate</p>
         </div>
       ) : (
         <div className="likes-list">
@@ -291,7 +291,6 @@ function LikesPage({ matchedProfiles }: { matchedProfiles: Profile[] }) {
 
 export default function App() {
   const [index, setIndex] = useState(0)
-  const [lastAction, setLastAction] = useState<string | null>(null)
   const [matchedProfiles, setMatchedProfiles] = useState<Profile[]>([])
   const [showSuperNeigh, setShowSuperNeigh] = useState(false)
   const [showMatchFor, setShowMatchFor] = useState<Profile | null>(null)
@@ -358,7 +357,6 @@ export default function App() {
   }
 
   function commitLike() {
-    setLastAction('💚 Liked!')
     const likedProfile = deck[index]
     setMatchedProfiles(prev => [...prev, likedProfile])
     const next = index + 1
@@ -371,7 +369,6 @@ export default function App() {
   }
 
   function commitNope() {
-    setLastAction('❌ Noped')
     const next = index + 1
     setIndex(next)
     if (next >= deck.length) setTimeout(() => openSuperNeigh(), 400)
@@ -420,10 +417,10 @@ export default function App() {
 
       {/* Header */}
       <div className="header">
-        <span style={{ fontSize: 11, color: '#a1a1aa' }}>v0.0.1b</span>
+        <span style={{ fontSize: 13, color: '#a1a1aa' }}>v0.0.1b</span>
         <h1 className="app-title">🐴 HorseMatch</h1>
         <div className="notif-bell-wrap" onClick={openNotifications}>
-          <span className={bellShaking ? 'bell-shake' : ''} style={{ fontSize: 20 }}>🔔</span>
+          <span className={bellShaking ? 'bell-shake' : ''} style={{ fontSize: 23 }}>🔔</span>
           {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
         </div>
       </div>
@@ -436,9 +433,9 @@ export default function App() {
           <div className="card-area">
             {isDone ? (
               <div className="done-card">
-                <div style={{ fontSize: 52 }}>🐎</div>
-                <p style={{ fontSize: 20, fontWeight: 700, color: '#18181b', marginTop: 12 }}>No more horses!</p>
-                <p style={{ fontSize: 12, color: '#a1a1aa', marginTop: 4 }}>you've seen them all (maybe)</p>
+                <div style={{ fontSize: 61 }}>🐎</div>
+                <p style={{ fontSize: 23, fontWeight: 700, color: '#18181b', marginTop: 12 }}>No more horses!</p>
+                <p style={{ fontSize: 14, color: '#a1a1aa', marginTop: 4 }}>you've seen them all (maybe)</p>
                 <button className="btn-like" style={{ marginTop: 24, width: '80%', height: 48, transform: 'none' }} onClick={() => setIndex(0)}>
                   Start over
                 </button>
@@ -497,17 +494,12 @@ export default function App() {
             <div className="action-row">
               <button className="btn-nope" onClick={handleNope} style={{ height: 52 }}>✕ Nope</button>
               <button className="btn-superlike" style={{ height: 44 }} onClick={openSuperNeigh}>
-                ⭐<br/><span style={{ fontSize: 9 }}>super</span>
+                ⭐<br/><span style={{ fontSize: 11 }}>super</span>
               </button>
               <button className="btn-like" onClick={handleLike} style={{ height: 58 }}>Like ♥</button>
             </div>
           )}
 
-          {/* Last action feedback */}
-          <div className="last-action">
-            {lastAction && <span style={{ color: '#71717a' }}>{lastAction}</span>}
-            <span style={{ color: '#a1a1aa', fontSize: 11 }}>matches: {matchedProfiles.length}</span>
-          </div>
         </>
       )}
 
@@ -517,7 +509,7 @@ export default function App() {
           🏠<span>Home</span>
         </div>
         <div className={`nav-item nav-likes ${activePage === 'likes' ? 'active-nav' : ''}`} onClick={() => setActivePage('likes')}>
-          <span style={{ fontSize: 20 }}>♡</span>
+          <span style={{ fontSize: 23 }}>♡</span>
           <span>Likes</span>
         </div>
         <div className="nav-item nav-messages">
